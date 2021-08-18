@@ -1,11 +1,19 @@
 import React from 'react';
-
-import ToDo from './components/todo/todo.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ListProvider from './context/ListContext';
+import SettingsProvider from './context/Context';
+import ToDo from './components/todo';
 
 export default class App extends React.Component {
   render() {
     return (
-      <ToDo />
+      <>
+        <SettingsProvider>
+          <ListProvider>
+            <ToDo />
+          </ListProvider>
+        </SettingsProvider>
+      </>
     );
   }
 }
