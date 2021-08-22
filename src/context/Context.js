@@ -1,34 +1,28 @@
-import React,{useState} from 'react';
+import React, { useState, useEffect } from 'react';
+export const settingContext = React.createContext();
 
-export const SettingContext = React.createContext();
-
-function SettingsContext(props) {
-    const [numberOfItems,setNumberOfItems] = useState(3);
-    const [view,setView] = useState(false);
-    const [start,setStart] = useState(0);
-    const [end,setEnd] = useState(numberOfItems-1);
-
-
-    function setSettings(numb,val){
-        if(numb){
-            setNumberOfItems(numb)
-        }
-            setView(val);
-        
+function SettingContext(props) {
+    const [numberOfItems, setnumberOfItems] = useState(2);
+    const [showCompleteList, setShowCompleteList] = useState(true);
+    const state = {
+        numberOfItems, showCompleteList,
+        setnumberOfItems, setShowCompleteList,
     }
-   function nextpage(){
-       setStart(start+numberOfItems);
-       setEnd(end+numberOfItems);
-   }
-   function previouspage(){
-       setStart(start-numberOfItems);
-       setEnd(end-numberOfItems);
-   }
+
+    useEffect(() => {
+        const localSettings = JSON.parse(localStorage.getItem('change settings'));
+        if (localSettings) {
+            setnumberOfItems(Number(localSettings.numberOfItems));
+            setShowCompleteList(showCompleteList);
+        }
+    }, [])
+
+
     return (
-        <SettingContext.Provider value={{numberOfItems,view,setSettings,start,end,nextpage,previouspage}}>
+        <settingContext.Provider value={state}>
             {props.children}
-        </SettingContext.Provider>
+        </settingContext.Provider>
     )
 }
 
-export default SettingsContext
+export default SettingContext;

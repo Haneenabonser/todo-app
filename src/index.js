@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import App from './app.js';
+import AuthProvider from './context/auth';
 
-class Main extends React.Component {
-  render() {
-    return <App />;
-  }
-}
+ReactDOM.render(
+  <AuthProvider>
+    <App />
+  </AuthProvider>,
 
-const rootElement = document.getElementById('root');
-ReactDOM.render(<Main />, rootElement);
+  document.getElementById('root')
+);

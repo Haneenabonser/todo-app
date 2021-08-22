@@ -6,4 +6,4 @@
     - On Netlify: https://haneen-todo-app.netlify.app 
 
 ## UML
-![UML](lab31.jpg)
+![UML](uml.jpg)

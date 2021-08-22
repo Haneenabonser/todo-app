@@ -1,19 +1,60 @@
-import React from 'react';
+import React, { useContext } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ListProvider from './context/ListContext';
-import SettingsProvider from './context/Context';
+import SettingProvider from './context/Context';
 import ToDo from './components/todo';
+import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom';
+import Header from './components/Header';
+import SettingsForm from './components/Settings.js';
+import { If, Else, Then } from 'react-if';
+import { AuthContext } from './context/auth';
+import Auth from './components/auth/Auth';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <>
-        <SettingsProvider>
-          <ListProvider>
-            <ToDo />
-          </ListProvider>
-        </SettingsProvider>
-      </>
-    );
-  }
+const Delete = () => {
+  return (
+    <Auth capability="delete">
+    </Auth>
+  );
+};
+
+const Update = () => {
+  return (
+    <Auth capability="update">
+    </Auth>
+  );
+};
+
+
+
+function App() {
+  const contextCondition = useContext(AuthContext);
+
+
+  return (
+    <>
+      <Header />
+      <If condition={contextCondition.loggedIn}>
+        <Then>
+          <Router>
+            <Switch>
+              <SettingProvider>
+                <Route exact path='/settings' >
+                  <SettingsForm />
+                </Route>
+                <Route exact path='/'>
+                  <Update />
+                  <Delete />
+                  <ToDo />
+                </Route>
+              </SettingProvider>
+            </Switch>
+          </Router>
+        </Then>
+        <Else>
+          <div></div>
+        </Else>
+      </If>
+    </>
+  )
 }
+
+export default App;
