@@ -1,57 +1,59 @@
-import React, { useState,useEffect,useContext } from 'react';
-import TodoForm from '../hooks/form';
-import TodoList from './list.js';
-import { ListContext } from '../context/ListContext';
+import React, { useEffect, useState } from 'react';
+import Form from './Form';
+import List from './List';
+import { v4 as uuid } from 'uuid';
 import './todo.scss';
-import Header from './Header';
 
-function ToDo(props) {
+const ToDo = () => {
+  const [list, setList] = useState([]);
+  const [incomplete, setIncomplete] = useState([]);
 
-  const listContext = useContext(ListContext);
-  const [state, setState] = useState([])
+  function addItem(item) {
+    let data = {
+      id: uuid(),
+      text: item.text,
+      assignee: item.assignee,
+      complete: false,
+      difficulty: item.difficulty
+    }
+    setList([...list, data]);
+  }
 
-  useEffect(()=>{
-    let list = [
-      { _id: 1, complete: false, text: 'Do Homeworks', difficulty: 4, assignee: 'Haneen' },
-      { _id: 2, complete: false, text: 'study for mock intreview', difficulty: 5, assignee: 'Haneen' },
-      { _id: 3, complete: false, text: 'clean rooms', difficulty: 3, assignee: 'Areej' },
-      { _id: 4, complete: false, text: 'workout', difficulty: 3, assignee: 'Areej' },
-      { _id: 5, complete: true, text: 'clean the kitchen', difficulty: 3, assignee: 'Aya' },
-      { _id: 6, complete: true, text: 'fix the light', difficulty: 2, assignee: 'Nasser' },
 
-    ];
-    
-    setState(list);
-  },[])
-  
+  function toggleComplete(id) {
+
+    const items = list.map(item => {
+      if (item.id == id) {
+        item.complete = !item.complete;
+      }
+      return item;
+    });
+
+    setList(items);
+
+  }
+
+  useEffect(() => {
+    let incompleteList = list.filter(item => !item.complete).length;
+    setIncomplete(incompleteList);
+    document.title = `${incomplete}`;
+  }, [list]);
 
   return (
     <>
-        <Header/>
-        <h2 className="title">
-          To Do List Manager ({listContext.list.filter(item => !item.complete).length})
-        </h2>
-    
-
+      <h2 className="title">
+        To Do List Manager ({incomplete})
+      </h2>
       <section className="todo">
-    
-
         <div>
-          <TodoForm
-
-            />
+          <Form addItem={addItem} />
         </div>
-
         <div>
-          <TodoList
-            list={state}
-
-          />
+          <List list={list} toggleComplete={toggleComplete} />
         </div>
       </section>
     </>
   );
-}
-
+};
 
 export default ToDo;
